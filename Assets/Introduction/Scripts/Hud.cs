@@ -10,9 +10,9 @@ public class Hud : MonoBehaviour
     public TMP_Text healthText;
     public TMP_Text manaText;
     public TMP_Text levelText;
-    public TMP_Text xpText;
     public Image manaImage;
     public Image healthImage;
+    public Image xpImage;
 
     public static int score = 0;
 
@@ -27,21 +27,19 @@ public class Hud : MonoBehaviour
     void Update()
     {
         Wizard player = Wizard.Instance;
-        int health = player.health;
+        int health = (int) player.health;
         int mana = (int) player.mana;
         Playerstats playerstats= Wizard.stats;
 
         float maxHealth = playerstats.maxHealth;
         float maxMana = playerstats.maxMana;
         int level = playerstats.level;
-        float xp = playerstats.xp;
 
 
         scoreText.text ="Score: " +score;
         healthText.text ="Health: " + health + "/" + maxHealth;
         manaText.text ="Mana: " + mana + "/" + maxMana;
         levelText.text = "Level:" + level;
-        xpText.text = "XP:" + xp;
 
 
         float manaPercentage = mana / maxMana;
@@ -49,6 +47,9 @@ public class Hud : MonoBehaviour
 
         float healthPercentage = health / maxHealth;
         healthImage.transform.localScale = new Vector3(healthPercentage, 1, 1);
+
+        float xpPercentage = playerstats.xp / (level *2.5f);
+        xpImage.transform.localScale = new Vector3(xpPercentage, 1, 1);
 
     }
 }

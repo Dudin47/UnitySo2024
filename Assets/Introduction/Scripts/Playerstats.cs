@@ -16,17 +16,17 @@ public class Playerstats
     public void GetXp(float newXp) {
         xp += newXp;
 
-        if (xp >= level*2f)
+        if (xp >= level*2.5f)
         {
-            xp -= level*2f;
+            xp -= level*2.5f;
             LevelUp();
         }
     }
 
     public void LevelUp() {
         level++;
-        /*skillPoints++;
-        AssignSkillPoint();*/
+        skillPoints++;
+        AssignSkillPoint();
 
         movementSpeed += 0.25f;
         maxHealth += 10;
@@ -36,20 +36,19 @@ public class Playerstats
     }
 
     public void AssignSkillPoint() {
-        switch ((int)Random.value*3) {
+        switch (Random.Range(0, 2)) {
             case 0:
                 skillPoints--;
-                movementSpeed += 0.25f;
+                movementSpeed += 0.5f;
                 break;
             case 1:
                 skillPoints--;
-                castingTime -= 0.1f;
+                castingTime -= 0.3f;
                 break;
             case 2:
                 skillPoints--;
-                maxMana += 5;
+                maxMana += 10;
                 break;
         }
     }
-
 }

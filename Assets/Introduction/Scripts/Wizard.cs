@@ -1,4 +1,3 @@
-
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,19 +10,22 @@ public class Wizard : MonoBehaviour
     private Vector3 lastMovement = Vector3.zero;
     private Animator animator;
 
-    public int health = 100;
+    private float invincibleCounter = 0;
+
+    public float health = 100;
     public float mana = 50;
 
-    public Playerstats stats;
+    public static Playerstats stats;
 
     // Start is called before the first frame update
     void Start()
     {
-        health = (int) stats.maxHealth;
-        mana = (int) stats.maxMana;
-        if(stats == null){
+        if (stats == null)
+        {
             stats = new Playerstats();
         }
+        health = stats.maxHealth;
+        mana =  stats.maxMana;
         Instance = this;
         animator = GetComponent<Animator>();
     }
@@ -31,6 +33,18 @@ public class Wizard : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (health <= 0)
+        {
+            GameManager.GoToTitle();
+        }
+
+        if (GameManager.Instance.state2 == GameManager.GameStates.paused)
+        {
+            return;
+        }
+
+        
+
         // Movement
         Vector3 movement = new Vector3(0,0,0);
         if (Input.GetKey("w"))
@@ -81,7 +95,7 @@ public class Wizard : MonoBehaviour
         //GetKomponent<Fireball>().
         // Casting
         counter += Time.deltaTime;
-        if (counter > stats.castingTime && Input.GetKeyDown(KeyCode.Space))
+        if (counter > stats.castingTime && Input.GetKeyDown(KeyCode.Space) && mana >= 5)
         {
             GameObject obj = Instantiate(fireballPrefab, transform.position, Quaternion.identity);
             obj.GetComponent<Fireball>().direction = lastMovement;
@@ -101,7 +115,16 @@ public class Wizard : MonoBehaviour
             mana = stats.maxMana;
         }
 
-
+        invincibleCounter -= Time.deltaTime;
         
+    }
+
+    public void TakeDamage(float damage) 
+    {
+        if (invincibleCounter <= 0)
+        {
+            health -= damage;
+            invincibleCounter = 1f;
+        }
     }
 }
